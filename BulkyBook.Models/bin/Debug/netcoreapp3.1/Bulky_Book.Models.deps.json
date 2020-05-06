@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.1",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "Bulky_Book.Models/1.0.0": {
+        "runtime": {
+          "Bulky_Book.Models.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Bulky_Book.Models/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

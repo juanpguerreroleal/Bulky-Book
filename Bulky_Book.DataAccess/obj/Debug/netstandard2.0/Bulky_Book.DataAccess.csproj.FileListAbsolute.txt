@@ -1,0 +1,3 @@
+C:\Users\juan_\source\repos\Bulky_Book.DataAccess\bin\Debug\netstandard2.0\Bulky_Book.Models.dll
+C:\Users\juan_\source\repos\Bulky_Book.DataAccess\obj\Debug\netstandard2.0\Bulky_Book.DataAccess.AssemblyInfoInputs.cache
+C:\Users\juan_\source\repos\Bulky_Book.DataAccess\obj\Debug\netstandard2.0\Bulky_Book.DataAccess.AssemblyInfo.cs

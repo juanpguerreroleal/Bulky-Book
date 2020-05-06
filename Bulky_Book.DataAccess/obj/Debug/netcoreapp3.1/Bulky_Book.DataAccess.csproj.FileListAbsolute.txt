@@ -1,0 +1,11 @@
+C:\Users\juan_\source\repos\Bulky_Book.DataAccess\bin\Debug\netcoreapp3.1\Bulky_Book.DataAccess.deps.json
+C:\Users\juan_\source\repos\Bulky_Book.DataAccess\bin\Debug\netcoreapp3.1\Bulky_Book.DataAccess.dll
+C:\Users\juan_\source\repos\Bulky_Book.DataAccess\obj\Debug\netcoreapp3.1\Bulky_Book.DataAccess.csprojAssemblyReference.cache
+C:\Users\juan_\source\repos\Bulky_Book.DataAccess\obj\Debug\netcoreapp3.1\Bulky_Book.DataAccess.AssemblyInfoInputs.cache
+C:\Users\juan_\source\repos\Bulky_Book.DataAccess\obj\Debug\netcoreapp3.1\Bulky_Book.DataAccess.AssemblyInfo.cs
+C:\Users\juan_\source\repos\Bulky_Book.DataAccess\bin\Debug\netcoreapp3.1\Bulky_Book.DataAccess.pdb
+C:\Users\juan_\source\repos\Bulky_Book.DataAccess\obj\Debug\netcoreapp3.1\Bulky_Book.DataAccess.dll
+C:\Users\juan_\source\repos\Bulky_Book.DataAccess\obj\Debug\netcoreapp3.1\Bulky_Book.DataAccess.pdb
+C:\Users\juan_\source\repos\Bulky_Book.DataAccess\bin\Debug\netcoreapp3.1\Bulky_Book.Models.dll
+C:\Users\juan_\source\repos\Bulky_Book.DataAccess\bin\Debug\netcoreapp3.1\Bulky_Book.Models.pdb
+C:\Users\juan_\source\repos\Bulky_Book.DataAccess\obj\Debug\netcoreapp3.1\Bulky_Book.DataAccess.csproj.CopyComplete
