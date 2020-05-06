@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Bulky_Book.Models;
+using Bulky_Book.Models.ViewModels;
 
-namespace Bulky_Book.Controllers
+namespace Bulky_Book.Areas.Customer.Controllers
 {
+    [Area(nameof(Customer))]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
