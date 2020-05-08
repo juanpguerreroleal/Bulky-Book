@@ -6,15 +6,17 @@ using Bulky_Book.DataAccess;
 using Bulky_Book.DataAccess.Repository;
 using Bulky_Book.DataAccess.Repository.IRepository;
 using Bulky_Book.Models;
+using Bulky_Book.Utility;
+using Dapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bulky_Book.Areas.Admin.Controllers
 {
     [Area(nameof(Admin))]
-    public class CategoryController : Controller
+    public class CoverTypeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        public CategoryController(IUnitOfWork unitOfWork)
+        public CoverTypeController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
@@ -25,30 +27,36 @@ namespace Bulky_Book.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            IEnumerable<Category> categories = _unitOfWork.Category.GetAll();
-            return Json(new { data = categories });
+            IEnumerable<CoverType> covertypes = _unitOfWork.SP_Call.List<CoverType>(SD.Proc_CoverType_GetAll,null);
+            return Json(new { data = covertypes });
         }
         public IActionResult Upsert(int? id)
         {
             if (id != null)
             {
-                var model = _unitOfWork.Category.Get(id.Value);
+                var parameter = new DynamicParameters();
+                parameter.Add("@Id", id);
+                var model = _unitOfWork.SP_Call.OneRecord<CoverType>(SD.Proc_CoverType_Get, parameter);
                 return View(model);
             }
-            return View(new Category());
+            return View(new CoverType());
         }
         [HttpPost]
-        public IActionResult Upsert(Category model)
+        public IActionResult Upsert(CoverType model)
         {
             if (ModelState.IsValid)
             {
+                var parameter = new DynamicParameters();
+                parameter.Add("@Name", model.Name);
                 if (model.Id != 0)
                 {
-                    _unitOfWork.Category.Update(model);
+
+                    parameter.Add("@Id", model.Id);
+                    _unitOfWork.SP_Call.Execute(SD.Proc_CoverType_Update, parameter);
                 }
                 else
                 {
-                    _unitOfWork.Category.Add(model);
+                    _unitOfWork.SP_Call.Execute(SD.Proc_CoverType_Create, parameter);
                 }
                 _unitOfWork.SaveChanges();
             }
@@ -58,13 +66,15 @@ namespace Bulky_Book.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Remove(int id)
         {
+            var parameter = new DynamicParameters();
+            parameter.Add("@id", id);
             bool success = false;
-            var model = _unitOfWork.Category.GetFirstOrDefault(x => x.Id == id);
+            var model = _unitOfWork.SP_Call.OneRecord<CoverType>(SD.Proc_CoverType_Get, parameter);
             if (model != null)
             {
                 try
                 {
-                    _unitOfWork.Category.Remove(model.Id);
+                    _unitOfWork.SP_Call.Execute(SD.Proc_CoverType_Delete,parameter);
                     _unitOfWork.SaveChanges();
                     success = true;
                 }
