@@ -9,15 +9,17 @@ namespace Bulky_Book.Areas.Customer.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private DataAccess.Repository.IRepository.IUnitOfWork _unitOfWork { get; set; }
+        public HomeController(ILogger<HomeController> logger, DataAccess.Repository.IRepository.IUnitOfWork unitOfWork)
         {
             _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var products = _unitOfWork.Product.GetAll(includeProperties: "Category,CoverType");
+            return View(products);
         }
 
         public IActionResult Privacy()
