@@ -28,7 +28,7 @@ namespace Bulky_Book.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            IEnumerable<Product> products = _unitOfWork.Product.GetAll();
+            IEnumerable<Product> products = _unitOfWork.Product.GetAll(includeProperties:"Category,CoverType");
             return Json(new { data = products });
         }
         public IActionResult Upsert(int? id)
