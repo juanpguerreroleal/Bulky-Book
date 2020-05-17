@@ -11,8 +11,8 @@ C:\Users\juan_\source\repos\BulkyBook\Bulky_Book.Utility\bin\Debug\netstandard2.
 C:\Users\juan_\source\repos\BulkyBook\Bulky_Book.Utility\bin\Debug\netstandard2.0\Bulky_Book.Utility.dll
 C:\Users\juan_\source\repos\BulkyBook\Bulky_Book.Utility\bin\Debug\netstandard2.0\Bulky_Book.Utility.pdb
 C:\Users\juan_\source\repos\BulkyBook\Bulky_Book.Utility\obj\Debug\netstandard2.0\Bulky_Book.Utility.csprojAssemblyReference.cache
-C:\Users\juan_\source\repos\BulkyBook\Bulky_Book.Utility\obj\Debug\netstandard2.0\Bulky_Book.Utility.csproj.CoreCompileInputs.cache
 C:\Users\juan_\source\repos\BulkyBook\Bulky_Book.Utility\obj\Debug\netstandard2.0\Bulky_Book.Utility.AssemblyInfoInputs.cache
 C:\Users\juan_\source\repos\BulkyBook\Bulky_Book.Utility\obj\Debug\netstandard2.0\Bulky_Book.Utility.AssemblyInfo.cs
 C:\Users\juan_\source\repos\BulkyBook\Bulky_Book.Utility\obj\Debug\netstandard2.0\Bulky_Book.Utility.dll
 C:\Users\juan_\source\repos\BulkyBook\Bulky_Book.Utility\obj\Debug\netstandard2.0\Bulky_Book.Utility.pdb
+C:\Users\juan_\source\repos\BulkyBook\Bulky_Book.Utility\obj\Debug\netstandard2.0\Bulky_Book.Utility.csproj.CoreCompileInputs.cache

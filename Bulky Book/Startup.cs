@@ -14,6 +14,8 @@ using Microsoft.Extensions.Hosting;
 using Bulky_Book.DataAccess;
 using Bulky_Book.DataAccess.Repository.IRepository;
 using Bulky_Book.DataAccess.Repository;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Bulky_Book.Utility;
 
 namespace Bulky_Book
 {
@@ -33,8 +35,9 @@ namespace Bulky_Book
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddIdentity<IdentityUser, IdentityRole>().AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddSingleton<IEmailSender, EmailSender>();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddRazorPages();
         }
