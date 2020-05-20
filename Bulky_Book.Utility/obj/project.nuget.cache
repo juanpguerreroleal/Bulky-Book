@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "C9dEI/61hISsXovddw2Fi7qZXgsOxB7yI6swdaUfNrj5w0mZi2v1IzxupJSAywOZd9RmE6Vw+uk86nSZFj3Wvw==",
+  "dgSpecHash": "JC7bsWrKY/LLJUxE/yvJ5yDWITR/9m7k8lehJImxt8DQZen893x2sTLqwTXdo0LmXBunooeszSna7oYDrinL8A==",
   "success": true,
   "projectFilePath": "C:\\Users\\juan_\\source\\repos\\BulkyBook\\Bulky_Book.Utility\\Bulky_Book.Utility.csproj",
   "expectedPackageFiles": [
@@ -127,6 +127,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\runtime.ubuntu.14.04-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.ubuntu.14.04-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\runtime.ubuntu.16.04-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.ubuntu.16.04-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl\\4.3.0\\runtime.ubuntu.16.10-x64.runtime.native.system.security.cryptography.openssl.4.3.0.nupkg.sha512",
+    "C:\\Users\\juan_\\.nuget\\packages\\sendgrid\\9.15.0\\sendgrid.9.15.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\system.appcontext\\4.3.0\\system.appcontext.4.3.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\system.buffers\\4.5.0\\system.buffers.4.5.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\system.collections\\4.3.0\\system.collections.4.3.0.nupkg.sha512",
