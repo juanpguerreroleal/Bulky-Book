@@ -8,11 +8,13 @@ using Bulky_Book.DataAccess.Repository.IRepository;
 using Bulky_Book.Models;
 using Bulky_Book.Utility;
 using Dapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bulky_Book.Areas.Admin.Controllers
 {
     [Area(nameof(Admin))]
+    [Authorize(Roles = SD.Role_Admin)]
     public class CoverTypeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

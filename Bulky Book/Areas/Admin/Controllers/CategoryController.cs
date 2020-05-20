@@ -6,11 +6,14 @@ using Bulky_Book.DataAccess;
 using Bulky_Book.DataAccess.Repository;
 using Bulky_Book.DataAccess.Repository.IRepository;
 using Bulky_Book.Models;
+using Bulky_Book.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bulky_Book.Areas.Admin.Controllers
 {
     [Area(nameof(Admin))]
+    [Authorize(Roles = SD.Role_Admin)]
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
