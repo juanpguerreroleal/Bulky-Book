@@ -49,13 +49,19 @@ namespace Bulky_Book
             });
             services.AddAuthentication().AddFacebook(options =>
             {
-                options.AppId = "";
-                options.AppSecret = "";
+                options.AppId = "1170383753308488";
+                options.AppSecret = "a57c91ca1769780ac6c958070b46e542";
             });
             services.AddAuthentication().AddGoogle(options =>
             {
-                options.ClientId = "-.apps.googleusercontent.com";
-                options.ClientSecret = "";
+                options.ClientId = "831985392943-dhcr59sirl8v3s3cg16ngr50tfui5ttd.apps.googleusercontent.com";
+                options.ClientSecret = "SYMhHrFsrTI2SQon7MauQuiX";
+            });
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
             });
         }
 
@@ -75,6 +81,7 @@ namespace Bulky_Book
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseSession();
 
             app.UseRouting();
 

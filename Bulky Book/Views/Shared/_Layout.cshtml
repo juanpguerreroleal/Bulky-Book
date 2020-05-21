@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -46,6 +48,25 @@
                                     <a asp-area="Admin" asp-controller="Company" asp-action="Index" class="dropdown-item">Companies</a>
                                     <a asp-area="Admin" asp-controller="User" asp-action="Index" class="dropdown-item">Users</a>
                                 </div>
+                            </li>
+                        }
+                        @if (HttpContextAccessor.HttpContext.Session.GetInt32(Bulky_Book.Utility.SD.SShoppingCart) != null)
+                        {
+                            <li style="color:white;">
+                                <a asp-area="Custoer" asp-controller="Cart" asp-action="Index" class="nav-link">
+                                    @{
+                                        var count = HttpContextAccessor.HttpContext.Session.GetInt32(Bulky_Book.Utility.SD.SShoppingCart);
+                                    }
+                                    <i class="fas fa-shoppping-cart">&nbsp; (@count)</i>
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li style="color:white;">
+                                <a href="#" class="nav-link">
+                                    <i class="fas fa-shoppping-cart">&nbsp; (0)</i>
+                                </a>
                             </li>
                         }
                     </ul>
