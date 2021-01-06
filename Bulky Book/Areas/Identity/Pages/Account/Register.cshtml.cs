@@ -113,7 +113,7 @@ namespace Bulky_Book.Areas.Identity.Pages.Account
                     PostalCode = Input.PostalCode,
                     Name = Input.Name,
                     PhoneNumber = Input.PhoneNumber,
-                    Role = SD.Role_Admin
+                    Role = Input.Role
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
@@ -180,7 +180,11 @@ namespace Bulky_Book.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-
+            Input = new InputModel()
+            {
+                CompanyList = _unitOfWork.Company.GetAll().Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }),
+                RoleList = _roleManager.Roles.Where(x => x.Name != SD.Role_User_Indi).Select(x => x.Name).Select(i => new SelectListItem() { Text = i, Value = i })
+            };
             // If we got this far, something failed, redisplay form
             return Page();
         }
