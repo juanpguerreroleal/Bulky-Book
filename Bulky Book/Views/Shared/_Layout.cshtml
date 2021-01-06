@@ -53,7 +53,7 @@
                         @if (HttpContextAccessor.HttpContext.Session.GetInt32(Bulky_Book.Utility.SD.SShoppingCart) != null)
                         {
                             <li style="color:white;">
-                                <a asp-area="Custoer" asp-controller="Cart" asp-action="Index" class="nav-link">
+                                <a asp-area="Customer" asp-controller="Cart" asp-action="Index" class="nav-link">
                                     @{
                                         var count = HttpContextAccessor.HttpContext.Session.GetInt32(Bulky_Book.Utility.SD.SShoppingCart);
                                     }

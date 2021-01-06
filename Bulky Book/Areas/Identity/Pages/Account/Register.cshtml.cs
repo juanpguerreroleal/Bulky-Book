@@ -113,7 +113,7 @@ namespace Bulky_Book.Areas.Identity.Pages.Account
                     PostalCode = Input.PostalCode,
                     Name = Input.Name,
                     PhoneNumber = Input.PhoneNumber,
-                    Role = Input.Role
+                    Role = SD.Role_Admin
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
@@ -145,7 +145,7 @@ namespace Bulky_Book.Areas.Identity.Pages.Account
                         {
                             await _userManager.AddToRoleAsync(user, SD.Role_User_Comp);
                         }
-                        await _userManager.AddToRoleAsync(user, user.Role);
+                        await _userManager.AddToRoleAsync(user, SD.Role_Employee);
                     }
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
