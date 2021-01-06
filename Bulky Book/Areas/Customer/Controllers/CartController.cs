@@ -6,6 +6,8 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Bulky_Book.DataAccess.Repository.IRepository;
+using Bulky_Book.Utility;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -73,6 +75,42 @@ namespace Bulky_Book.Areas.Customer.Controllers
                 $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
             ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
             return RedirectToAction("Index");
+        }
+        public async Task<IActionResult> Plus(int cartId)
+        {
+            var cart = _unitOfWork.ShoppingCart.GetFirstOrDefault(x => x.Id == cartId, includeProperties:"Product");
+            cart.Count += 1;
+            cart.Price = SD.GetPriceBasedOnQuantity(cart.Count, cart.Product.Price, cart.Product.Price50, cart.Product.Price100);
+            _unitOfWork.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
+        public async Task<IActionResult> Minus(int cartId)
+        {
+            var cart = _unitOfWork.ShoppingCart.GetFirstOrDefault(x => x.Id == cartId, includeProperties: "Product");
+            if (cart.Count == 1)
+            {
+                _unitOfWork.ShoppingCart.Remove(cart);
+                var cnt = _unitOfWork.ShoppingCart.GetAll(x => x.ApplicationUserId == cart.ApplicationUserId).ToList().Count;
+                _unitOfWork.SaveChanges();
+                HttpContext.Session.SetInt32(SD.SShoppingCart, cnt - 1);
+            }
+            else
+            {
+                cart.Count -= 1;
+                cart.Price = SD.GetPriceBasedOnQuantity(cart.Count, cart.Product.Price, cart.Product.Price50, cart.Product.Price100);
+                _unitOfWork.SaveChanges();
+            }
+            return RedirectToAction(nameof(Index));
+        }
+        public async Task<IActionResult> Remove(int cartId)
+        {
+            var cart = _unitOfWork.ShoppingCart.GetFirstOrDefault(x => x.Id == cartId, includeProperties: "Product");
+            _unitOfWork.ShoppingCart.Remove(cart);
+            var cnt = _unitOfWork.ShoppingCart.GetAll(x => x.ApplicationUserId == cart.ApplicationUserId).ToList().Count;
+            _unitOfWork.SaveChanges();
+            HttpContext.Session.SetInt32(SD.SShoppingCart, cnt - 1);
+            
+            return RedirectToAction(nameof(Index));
         }
     }
 }
