@@ -6,12 +6,14 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Bulky_Book.DataAccess.Repository.IRepository;
+using Bulky_Book.Models;
 using Bulky_Book.Utility;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using Stripe;
 
 namespace Bulky_Book.Areas.Customer.Controllers
 {
@@ -21,6 +23,7 @@ namespace Bulky_Book.Areas.Customer.Controllers
         public readonly IUnitOfWork _unitOfWork;
         public readonly IEmailSender _emailSender;
         public readonly UserManager<IdentityUser> _userManager;
+        [BindProperty]
         public Bulky_Book.Models.ViewModels.ShoppingCartViewModel ShoppingCartViewModel { get; set; }
         public CartController(IUnitOfWork unitOfWork, IEmailSender emailSender, UserManager<IdentityUser> userManager)
         {
@@ -134,6 +137,84 @@ namespace Bulky_Book.Areas.Customer.Controllers
             ShoppingCartViewModel.OrderHeader.State = ShoppingCartViewModel.OrderHeader.ApplicationUser.State;
             ShoppingCartViewModel.OrderHeader.PostalCode = ShoppingCartViewModel.OrderHeader.ApplicationUser.PostalCode;
             return View(ShoppingCartViewModel);
+        }
+        [HttpPost]
+        [ActionName("Summary")]
+        [ValidateAntiForgeryToken]
+        public IActionResult SummaryPost(string StripeToken)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            ShoppingCartViewModel.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(x => x.Id == claim.Value, includeProperties: "Company");
+            ShoppingCartViewModel.ListCart = _unitOfWork.ShoppingCart.GetAll(x => x.ApplicationUserId == claim.Value, includeProperties: "Product");
+
+            ShoppingCartViewModel.OrderHeader.PaymentStatus = SD.PaymentStatusPending;
+            ShoppingCartViewModel.OrderHeader.OrderStatus = SD.StatusPending;
+            ShoppingCartViewModel.OrderHeader.ApplicationUserId = claim.Value;
+            ShoppingCartViewModel.OrderHeader.OrderDate = DateTime.Now;
+
+            _unitOfWork.OrderHeader.Add(ShoppingCartViewModel.OrderHeader);
+            _unitOfWork.SaveChanges();
+
+            List<OrderDetails> orderDetails = new List<OrderDetails>();
+            foreach (var item in ShoppingCartViewModel.ListCart)
+            {
+                item.Price = SD.GetPriceBasedOnQuantity(item.Count, item.Product.Price, item.Product.Price50, item.Product.Price100);
+                OrderDetails orderDetail = new OrderDetails
+                {
+                    ProductId = item.ProductId,
+                    OrderId = ShoppingCartViewModel.OrderHeader.Id,
+                    Price = item.Price,
+                    Count = item.Count
+                };
+                ShoppingCartViewModel.OrderHeader.OrderTotal += orderDetail.Count * orderDetail.Price;
+                _unitOfWork.OrderDetails.Add(orderDetail);
+            }
+            _unitOfWork.ShoppingCart.RemoveRange(ShoppingCartViewModel.ListCart);
+            _unitOfWork.SaveChanges();
+            HttpContext.Session.SetInt32(SD.SShoppingCart, 0);
+
+            if (StripeToken == null)
+            {
+                //Order will be created for delayed payment
+                ShoppingCartViewModel.OrderHeader.PaymentDueDate = DateTime.Now.AddDays(3);
+                ShoppingCartViewModel.OrderHeader.PaymentStatus = SD.PaymentStatusDelayedPayment;
+                ShoppingCartViewModel.OrderHeader.OrderStatus = SD.StatusApproved;
+            }
+            else
+            {
+                //Process
+                var options = new ChargeCreateOptions()
+                {
+                    Amount = Convert.ToInt32(ShoppingCartViewModel.OrderHeader.OrderTotal * 100),
+                    Currency = "usd",
+                    Description = "Order ID : " + ShoppingCartViewModel.OrderHeader.Id,
+                    Source = StripeToken
+                };
+                var service = new ChargeService();
+                Charge charge = service.Create(options);
+                if (charge.BalanceTransactionId == null)
+                {
+                    ShoppingCartViewModel.OrderHeader.PaymentStatus = SD.PaymentStatusRejected;
+                }
+                else
+                {
+                    ShoppingCartViewModel.OrderHeader.TransactionId = charge.BalanceTransactionId;
+                }
+                if (charge.Status.ToLower() == "succeeded")
+                {
+                    ShoppingCartViewModel.OrderHeader.PaymentStatus = SD.PaymentStatusApproved;
+                    ShoppingCartViewModel.OrderHeader.OrderStatus = SD.StatusApproved;
+                    ShoppingCartViewModel.OrderHeader.PaymentDate = DateTime.Now;
+                }
+            }
+            _unitOfWork.SaveChanges();
+            return RedirectToAction("OrderConfirmation", "Cart", new { id = ShoppingCartViewModel.OrderHeader.Id });
+
+        }
+        public IActionResult OrderConfirmation(int Id)
+        {
+            return View(Id);
         }
     }
 }
