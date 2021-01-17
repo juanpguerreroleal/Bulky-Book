@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Bulky_Book.DataAccess.Repository.IRepository;
 using Bulky_Book.Models;
+using Bulky_Book.Models.ViewModels;
 using Bulky_Book.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,9 @@ namespace Bulky_Book.Areas.Admin.Controllers
     public class OrderController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        [BindProperty]
+        public OrderDetailsViewModel OrderDetailsViewModel { get; set; }
+
         public OrderController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -61,6 +65,61 @@ namespace Bulky_Book.Areas.Admin.Controllers
                     break;
             }
             return Json(new { data = orderHeaders });
+        }
+        public IActionResult Details(int id)
+        {
+            OrderDetailsViewModel = new OrderDetailsViewModel()
+            {
+                OrderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(x => x.Id == id, includeProperties:"ApplicationUser"),
+                OrderDetails = _unitOfWork.OrderDetails.GetAll(x => x.OrderId == id, includeProperties: "Product")
+            };
+            return View(OrderDetailsViewModel);
+        }
+        [Authorize(Roles = SD.Role_Admin+","+SD.Role_Employee)]
+        public IActionResult StartProcessing(int id)
+        {
+            OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(x => x.Id == id);
+            orderHeader.OrderStatus = SD.StatusInProcess;
+            _unitOfWork.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        [HttpPost]
+        [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
+        public IActionResult ShipOrder()
+        {
+            OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(x => x.Id == OrderDetailsViewModel.OrderHeader.Id);
+            orderHeader.TrackingNumber = OrderDetailsViewModel.OrderHeader.TrackingNumber;
+            orderHeader.Carrier = OrderDetailsViewModel.OrderHeader.Carrier;
+            orderHeader.OrderStatus = SD.StatusShipped;
+            orderHeader.ShippingDate = DateTime.Now;
+            _unitOfWork.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
+        public IActionResult CancelOrder(int id)
+        {
+            OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(x => x.Id == id);
+            if (orderHeader.PaymentStatus == SD.StatusApproved)
+            {
+                var options = new RefundCreateOptions
+                {
+                    Amount = Convert.ToInt32(orderHeader.OrderTotal*100),
+                    Reason = RefundReasons.RequestedByCustomer,
+                    Charge = orderHeader.TransactionId
+                };
+                var service = new RefundService();
+                Refund refund = service.Create(options);
+
+                orderHeader.OrderStatus = SD.StatusRefunded;
+                orderHeader.PaymentStatus = SD.StatusRefunded;
+            }
+            else
+            {
+                orderHeader.OrderStatus = SD.StatusCancelled;
+                orderHeader.PaymentStatus = SD.StatusCancelled;
+            }
+            _unitOfWork.SaveChanges();
+            return RedirectToAction("Index");
         }
         #endregion
     }
